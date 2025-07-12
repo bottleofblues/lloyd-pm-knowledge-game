@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lloyd PM Knowledge Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    #result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lloyd PM Knowledge Game</h1>
+    <div class="question">
+      <label for="name">Your Name:</label><br />
+      <input type="text" id="name" />
+    </div>
+    <div class="question">
+      <label for="property">Which property do you manage?</label><br />
+      <select id="property">
+        <option value="">-- Select --</option>
+        <option value="Block 5 Lofts">Block 5 Lofts</option>
+        <!-- Add more properties here -->
+      </select>
+    </div>
+    <button onclick="startGame()">Start Game</button>
+
+    <div id="game" style="display:none; margin-top:2rem;"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const properties = {
+      "Block 5 Lofts": {
+        website: "https://www.block5lofts.com",
+        layouts: {
+          "The Blacksmith": {
+            squareFootage: 890,
+            bedrooms: 1,
+            bathrooms: 1,
+            price: "$1,900",
+            availableUnits: ["602", "902"] // Assume 601 and 901 are rented
+          },
+          "The Ore": {
+            squareFootage: 740,
+            bedrooms: 1,
+            bathrooms: 1,
+            price: "$1,750",
+            availableUnits: ["303", "703"]
+          }
+        }
+      }
+    };
+
+    let score = 0;
+    let currentProperty = null;
+
+    function startGame() {
+      const name = document.getElementById("name").value.trim();
+      const propertyKey = document.getElementById("property").value;
+      const result = document.getElementById("result");
+
+      if (!name || !propertyKey) {
+        result.textContent = "Please enter your name and select a property.";
+        return;
+      }
+
+      currentProperty = properties[propertyKey];
+      document.getElementById("game").style.display = "block";
+      document.getElementById("game").innerHTML = `
+        <p>Welcome, ${name}. You’re now simulating a resident inquiry for ${propertyKey}.</p>
+        <p>Question 1: What is the square footage of 'The Blacksmith'?</p>
+        <input type="number" id="q1" /><br /><br />
+
+        <p>Question 2: Is unit 601 available?</p>
+        <input type="text" id="q2" /><br /><br />
+
+        <p>Question 3: What is the monthly rent for 'The Blacksmith'?</p>
+        <input type="text" id="q3" /><br /><br />
+
+        <button onclick="checkAnswers()">Submit Answers</button>
+      `;
+      result.textContent = "";
+    }
+
+    function checkAnswers() {
+      score = 0;
+      const a1 = document.getElementById("q1").value.trim();
+      const a2 = document.getElementById("q2").value.trim().toLowerCase();
+      const a3 = document.getElementById("q3").value.trim();
+
+      const blacksmith = currentProperty.layouts["The Blacksmith"];
+
+      if (parseInt(a1) === blacksmith.squareFootage) {
+        score += 10;
+      }
+
+      if (!blacksmith.availableUnits.includes("601") && a2.includes("no")) {
+        score += 5;
+      }
+
+      if (a3 === blacksmith.price) {
+        score += 5;
+      }
+
+      document.getElementById("result").textContent = `Game Over! Your score is ${score} out of 20.`;
+    }
+  </script>
+</body>
+</html>
