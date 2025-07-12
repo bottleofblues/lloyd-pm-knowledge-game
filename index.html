@@ -13,7 +13,11 @@
     .container {
       background: #fff;
       padding: 2rem;
+<<<<<<< HEAD
       max-width: 700px;
+=======
+      max-width: 600px;
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
       margin: auto;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -21,7 +25,11 @@
       margin-bottom: 1rem;
     }
     #result {
+<<<<<<< HEAD
       margin-top: 1.5rem;
+=======
+      margin-top: 1rem;
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
       font-weight: bold;
     }
   </style>
@@ -29,8 +37,11 @@
 <body>
   <div class="container">
     <h1>Lloyd PM Knowledge Game</h1>
+<<<<<<< HEAD
     <p>Welcome to the Lloyd Property Manager Game! Please provide your name and select which property you would like to be quizzed on. After that, you will be given five scenarios of prospective residents asking about your property. After each scenario, the game will show you the correct answers, and give you a score at the end. Have fun!</p>
 
+=======
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
     <div class="question">
       <label for="name">Your Name:</label><br />
       <input type="text" id="name" />
@@ -59,7 +70,11 @@
             bedrooms: 1,
             bathrooms: 1,
             price: "$1,900",
+<<<<<<< HEAD
             availableUnits: ["602", "902"]
+=======
+            availableUnits: ["602", "902"] // Assume 601 and 901 are rented
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
           },
           "The Ore": {
             squareFootage: 740,
@@ -74,8 +89,11 @@
 
     let score = 0;
     let currentProperty = null;
+<<<<<<< HEAD
     let questions = [];
     let currentQuestionIndex = 0;
+=======
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
 
     function startGame() {
       const name = document.getElementById("name").value.trim();
@@ -88,6 +106,7 @@
       }
 
       currentProperty = properties[propertyKey];
+<<<<<<< HEAD
       score = 0;
       currentQuestionIndex = 0;
 
@@ -170,10 +189,53 @@
           document.getElementById("game").style.display = "none";
         }, 2000);
       }
+=======
+      document.getElementById("game").style.display = "block";
+      document.getElementById("game").innerHTML = `
+        <p>Welcome, ${name}. You’re now simulating a resident inquiry for ${propertyKey}.</p>
+        <p>Question 1: What is the square footage of 'The Blacksmith'?</p>
+        <input type="number" id="q1" /><br /><br />
+
+        <p>Question 2: Is unit 601 available?</p>
+        <input type="text" id="q2" /><br /><br />
+
+        <p>Question 3: What is the monthly rent for 'The Blacksmith'?</p>
+        <input type="text" id="q3" /><br /><br />
+
+        <button onclick="checkAnswers()">Submit Answers</button>
+      `;
+      result.textContent = "";
+    }
+
+    function checkAnswers() {
+      score = 0;
+      const a1 = document.getElementById("q1").value.trim();
+      const a2 = document.getElementById("q2").value.trim().toLowerCase();
+      const a3 = document.getElementById("q3").value.trim();
+
+      const blacksmith = currentProperty.layouts["The Blacksmith"];
+
+      if (parseInt(a1) === blacksmith.squareFootage) {
+        score += 10;
+      }
+
+      if (!blacksmith.availableUnits.includes("601") && a2.includes("no")) {
+        score += 5;
+      }
+
+      if (a3 === blacksmith.price) {
+        score += 5;
+      }
+
+      document.getElementById("result").textContent = `Game Over! Your score is ${score} out of 20.`;
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
     }
   </script>
 </body>
 </html>
+<<<<<<< HEAD
 <!-- Updated HTML for property game -->
 <!-- minor edit to trigger push -->
 <!-- another minor edit to trigger push again -->
+=======
+>>>>>>> 12b4d87bf0682f0a1527324f5b92cff8f9c75624
