@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lloyd PM Knowledge Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lloyd PM Knowledge Game</h1>
+    <p>Welcome to the Lloyd Property Manager Game! Please provide your name and select which property you would like to be quizzed on. After that, you will be given five scenarios of prospective residents asking about your property. After each scenario, the game will show you the correct answers, and give you a score at the end. Have fun!</p>
+
+    <div class="question">
+      <label for="name">Your Name:</label><br />
+      <input type="text" id="name" />
+    </div>
+    <div class="question">
+      <label for="property">Which property do you manage?</label><br />
+      <select id="property">
+        <option value="">-- Select --</option>
+        <option value="Block 5 Lofts">Block 5 Lofts</option>
+        <!-- Add more properties here -->
+      </select>
+    </div>
+    <button onclick="startGame()">Start Game</button>
+
+    <div id="game" style="display:none; margin-top:2rem;"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const properties = {
+      "Block 5 Lofts": {
+        website: "https://www.block5lofts.com",
+        layouts: {
+          "The Blacksmith": {
+            squareFootage: 890,
+            bedrooms: 1,
+            bathrooms: 1,
+            price: "$1,900",
+            availableUnits: ["602", "902"]
+          },
+          "The Ore": {
+            squareFootage: 740,
+            bedrooms: 1,
+            bathrooms: 1,
+            price: "$1,750",
+            availableUnits: ["303", "703"]
+          }
+        }
+      }
+    };
+
+    let score = 0;
+    let currentProperty = null;
+    let questions = [];
+    let currentQuestionIndex = 0;
+
+    function startGame() {
+      const name = document.getElementById("name").value.trim();
+      const propertyKey = document.getElementById("property").value;
+      const result = document.getElementById("result");
+
+      if (!name || !propertyKey) {
+        result.textContent = "Please enter your name and select a property.";
+        return;
+      }
+
+      currentProperty = properties[propertyKey];
+      score = 0;
+      currentQuestionIndex = 0;
+
+      questions = [
+        {
+          question: "What is the square footage of 'The Blacksmith'?",
+          inputId: "q1",
+          correctAnswer: currentProperty.layouts["The Blacksmith"].squareFootage.toString(),
+          points: 10
+        },
+        {
+          question: "Is unit 601 available?",
+          inputId: "q2",
+          correctAnswer: "no",
+          points: 5
+        },
+        {
+          question: "What is the monthly rent for 'The Blacksmith'?",
+          inputId: "q3",
+          correctAnswer: currentProperty.layouts["The Blacksmith"].price,
+          points: 5
+        },
+        {
+          question: "How many bathrooms does 'The Ore' layout have?",
+          inputId: "q4",
+          correctAnswer: currentProperty.layouts["The Ore"].bathrooms.toString(),
+          points: 5
+        },
+        {
+          question: "What is the price of 'The Ore' layout?",
+          inputId: "q5",
+          correctAnswer: currentProperty.layouts["The Ore"].price,
+          points: 5
+        }
+      ];
+
+      document.getElementById("game").style.display = "block";
+      showNextQuestion();
+      result.textContent = "";
+    }
+
+    function showNextQuestion() {
+      const gameDiv = document.getElementById("game");
+      const questionData = questions[currentQuestionIndex];
+
+      gameDiv.innerHTML = `
+        <p><strong>Scenario ${currentQuestionIndex + 1}:</strong> ${questionData.question}</p>
+        <input type="text" id="${questionData.inputId}" /><br /><br />
+        <button onclick="submitAnswer()">Submit Answer</button>
+      `;
+    }
+
+    function submitAnswer() {
+      const questionData = questions[currentQuestionIndex];
+      const userAnswer = document.getElementById(questionData.inputId).value.trim().toLowerCase();
+      const correctAnswer = questionData.correctAnswer.toLowerCase();
+      const result = document.getElementById("result");
+
+      let response = "";
+
+      if (userAnswer === correctAnswer) {
+        score += questionData.points;
+        response = `✅ Correct! +${questionData.points} points.`;
+      } else {
+        response = `❌ Incorrect. The correct answer was: "${questionData.correctAnswer}".`;
+      }
+
+      result.innerHTML = `<p>${response}</p>`;
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        setTimeout(() => {
+          result.innerHTML = "";
+          showNextQuestion();
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          result.innerHTML += `<p><strong>Game Over! Your total score is: ${score} out of 30.</strong></p>`;
+          document.getElementById("game").style.display = "none";
+        }, 2000);
+      }
+    }
+  </script>
+</body>
+</html>
